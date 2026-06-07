@@ -1,154 +1,561 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>音樂播放器</title>
+    <title>Stagea Music Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* 基礎設定 */
-        body {
-            background-color: #121212;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            color: #ffffff;
-            padding: 40px 20px;
-            margin: 0;
-            -webkit-font-smoothing: antialiased; /* 讓字體更平滑清晰 */
-        }
-        
-        .container { max-width: 1000px; margin: 0 auto; }
-        
-        /* 標題設計 (簡約風) */
-        h1 { 
-            text-align: center; 
-            font-size: 2.8rem; 
-            margin-bottom: 50px; 
-            font-weight: 800;
-            letter-spacing: 2px;
-        }
-        h2 { 
-            margin-bottom: 25px; 
-            color: #ffffff; 
-            font-weight: 600; 
-            font-size: 1.5rem;
-            border-left: 4px solid #ffffff; /* 加一個俐落的小邊條 */
-            padding-left: 12px;
+        :root {
+            color-scheme: dark;
+            --bg: #0F1115;
+            --panel: rgba(28, 32, 40, 0.72);
+            --panel-strong: rgba(28, 32, 40, 0.92);
+            --surface: #151821;
+            --surface-soft: rgba(255, 255, 255, 0.06);
+            --line: rgba(255, 255, 255, 0.1);
+            --text: #F5F7FA;
+            --muted: #A7ADB8;
+            --soft: #D9DEE7;
+            --accent: #FA586A;
+            --accent-soft: rgba(250, 88, 106, 0.18);
+            --radius-lg: 24px;
+            --radius-md: 20px;
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
         }
 
-        /* 網格排版 */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 24px;
-            margin-bottom: 60px;
-        }
-        
-        /* ✨ 升級版卡片設計 (無邊框、柔和陰影) */
-        .card {
-            background-color: #1a1a1a; /* 比背景稍微亮一點點的深灰 */
-            border-radius: 16px; /* 更圓潤現代的導角 */
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .card:hover {
-            transform: translateY(-6px); /* 懸浮效果 */
-            box-shadow: 0 12px 24px rgba(255,255,255,0.05); /* 微微的白光暈 */
-            background-color: #222222;
-        }
-        
-        /* 🎵 這裡就是你說的字體顏色！統一改成乾淨的 #e0e0e0 */
-        .card h3 { 
-            margin-top: 0; 
-            margin-bottom: 25px;
-            color: #e0e0e0; 
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            line-height: 1.4;
-        }
-        
-        /* 🖱️ 升級版按鈕設計 (純白簡約風) */
-        .link-btn {
-            display: inline-block;
-            background-color: #ffffff; /* 統一改成純白 */
-            color: #121212; /* 深色文字對比更強烈 */
-            text-decoration: none;
-            padding: 14px 0;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-            width: 100%; /* 讓按鈕填滿卡片寬度，視覺更整齊 */
+        * {
             box-sizing: border-box;
         }
-        .link-btn:hover { 
-            background-color: #e0e0e0; /* 滑鼠移過去稍微變暗 */
-            transform: scale(1.03); /* 按鈕微微放大 */
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(250, 88, 106, 0.08), transparent 34rem),
+                linear-gradient(180deg, #151821 0%, var(--bg) 46%, #0B0D11 100%);
+            color: var(--text);
+            font-family: Inter, "Noto Sans TC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* 極簡分隔線 */
-        hr {
-            border: 0;
-            height: 1px;
-            background: rgba(255,255,255,0.1); /* 半透明的很淡的線 */
-            margin: 60px 0;
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .shell {
+            width: min(1120px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 28px 0 56px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 38px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .mark {
+            display: grid;
+            width: 42px;
+            height: 42px;
+            place-items: center;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--line);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            color: var(--accent);
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .brand-title {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .brand-note {
+            margin: 2px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .hero {
+            display: grid;
+            gap: 14px;
+            margin-bottom: 34px;
+        }
+
+        .eyebrow {
+            margin: 0;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            max-width: 780px;
+            margin: 0;
+            color: var(--text);
+            font-size: clamp(40px, 8vw, 78px);
+            line-height: 0.95;
+            font-weight: 800;
+            letter-spacing: 0;
+        }
+
+        .intro {
+            max-width: 620px;
+            margin: 0;
+            color: var(--soft);
+            font-size: clamp(16px, 2.4vw, 19px);
+            line-height: 1.75;
+        }
+
+        .section {
+            margin-top: 42px;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .section-meta {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .album-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .album-card {
+            position: relative;
+            min-height: 280px;
+            overflow: hidden;
+            padding: 22px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)), var(--panel);
+            box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            transition: transform 220ms ease, border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+        }
+
+        .album-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(250, 88, 106, 0.42);
+            background: linear-gradient(180deg, rgba(250, 88, 106, 0.14), rgba(255, 255, 255, 0.04)), var(--panel-strong);
+            box-shadow: 0 28px 70px rgba(0, 0, 0, 0.44), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .album-symbol {
+            display: grid;
+            width: 92px;
+            height: 92px;
+            place-items: center;
+            margin-bottom: 28px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--accent);
+            font-size: 38px;
+            font-weight: 800;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        .album-card h3 {
+            margin: 0;
+            font-size: 28px;
+            line-height: 1.05;
+            font-weight: 800;
+        }
+
+        .album-card p {
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        .play-chip {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 14px 32px rgba(250, 88, 106, 0.28);
+            font-size: 18px;
+            transition: transform 220ms ease;
+        }
+
+        .album-card:hover .play-chip {
+            transform: scale(1.06);
+        }
+
+        .library-list {
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background: rgba(28, 32, 40, 0.68);
+            box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+        }
+
+        .library-item {
+            display: grid;
+            grid-template-columns: 44px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 14px;
+            min-height: 68px;
+            padding: 12px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            transition: background 180ms ease;
+        }
+
+        .library-item:last-child {
+            border-bottom: 0;
+        }
+
+        .library-item:hover {
+            background: rgba(255, 255, 255, 0.055);
+        }
+
+        .library-icon {
+            display: grid;
+            width: 44px;
+            height: 44px;
+            place-items: center;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--accent);
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .library-title {
+            display: block;
+            overflow: hidden;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 700;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .library-subtitle {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .library-action {
+            color: var(--muted);
+            font-size: 22px;
+        }
+
+        @media (max-width: 980px) {
+            .album-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .shell {
+                width: min(100% - 24px, 520px);
+                padding-top: 18px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                margin-bottom: 28px;
+            }
+
+            .brand-note {
+                display: none;
+            }
+
+            .hero {
+                margin-bottom: 26px;
+            }
+
+            .section {
+                margin-top: 34px;
+            }
+
+            .section-head {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .album-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .album-card {
+                min-height: 218px;
+                padding: 20px;
+            }
+
+            .album-symbol {
+                width: 74px;
+                height: 74px;
+                margin-bottom: 24px;
+                border-radius: 20px;
+                font-size: 30px;
+            }
+
+            .library-item {
+                grid-template-columns: 40px minmax(0, 1fr) auto;
+                gap: 12px;
+                padding: 12px 14px;
+            }
+
+            .library-icon {
+                width: 40px;
+                height: 40px;
+            }
         }
     </style>
 </head>
 <body>
+    <main class="shell">
+        <header class="topbar">
+            <a class="brand" href="index.html" aria-label="Stagea Music Library 首頁">
+                <span class="mark">♪</span>
+                <span>
+                    <strong class="brand-title">Music Space</strong>
+                </span>
+            </a>
+        </header>
 
-<div class="container">
-    <h1>音樂播放器</h1>
+        <section class="hero">
+            <h1>線上音樂播放器</h1>
+        </section>
 
-    <h2>📁 新音樂</h2>
-    <div class="grid">
-        <div class="card">
-            <h3>Stagea 1-1</h3>
-            <a href="1-1.html" class="link-btn">進入音樂庫</a>
-        </div>
-        <div class="card">
-            <h3>Stagea 1-2</h3>
-            <a href="1-2.html" class="link-btn">進入音樂庫</a>
-        </div>
-        <div class="card">
-            <h3>Stagea 2-1</h3>
-            <a href="2-1.html" class="link-btn">進入音樂庫</a>
-        </div>
-        <div class="card">
-            <h3>Stagea 2-2</h3>
-            <a href="2-2.html" class="link-btn">進入音樂庫</a>
-        </div>
-    </div>
+        <section class="section" aria-labelledby="stagea-title">
+            <div class="section-head">
+                <div>
+                    <h2 id="stagea-title">Stagea 教材</h2>
+                </div>
+            </div>
 
-    <hr>
+            <div class="album-grid">
+                <a class="album-card" href="1-1.html">
+                    <span class="album-symbol">1-1</span>
+                    <h3>Stagea 1-1</h3>
+                    <p>24 首曲目</p>
+                    <span class="play-chip" aria-hidden="true">▶</span>
+                </a>
 
-    <h2>🔗 音樂連結</h2>
-    <div class="grid">
-        <div class="card">
-            <h3>3歲小幼班 1</h3>
-            <a href="https://yms.ymm.co.jp/media/index.html?page=9003aff1958fe0e5869b0076831e9ad2" target="_blank" class="link-btn">前往播放</a>
-        </div>
-        <div class="card">
-            <h3>3歲小幼班 2</h3>
-            <a href="https://yms.ymm.co.jp/media/index.html?page=63713616f8e8a829a11bd9cde25d6d66" target="_blank" class="link-btn">前往播放</a>
-        </div>
-        <div class="card">
-            <h3>幼幼班-音樂是我的好朋友</h3>
-            <a href="https://yms.ymm.co.jp/media/index.html?page=e10e6e6111a0007bc70e48c1682b5103" target="_blank" class="link-btn">前往播放</a>
-        </div>
-        <div class="card">
-            <h3>幼兒班 1</h3>
-            <a href="https://yms.ymm.co.jp/media/index.html?page=d33d924f32baaae9e4b7ce79c6117db8" target="_blank" class="link-btn">前往播放</a>
-        </div>
-        <div class="card">
-            <h3>幼兒班 2</h3>
-            <a href="https://yms.ymm.co.jp/media/index.html?page=43fb4088ba2d592d5a06ba5a5b4f8d01" target="_blank" class="link-btn">前往播放</a>
-        </div>
-        <div class="card">
-            <h3>幼兒班 3</h3>
-            <a href="
+                <a class="album-card" href="1-2.html">
+                    <span class="album-symbol">1-2</span>
+                    <h3>Stagea 1-2</h3>
+                    <p>22 首曲目</p>
+                    <span class="play-chip" aria-hidden="true">▶</span>
+                </a>
+
+                <a class="album-card" href="2-1.html">
+                    <span class="album-symbol">2-1</span>
+                    <h3>Stagea 2-1</h3>
+                    <p>24 首曲目</p>
+                    <span class="play-chip" aria-hidden="true">▶</span>
+                </a>
+
+                <a class="album-card" href="2-2.html">
+                    <span class="album-symbol">2-2</span>
+                    <h3>Stagea 2-2</h3>
+                    <p>20 首曲目</p>
+                    <span class="play-chip" aria-hidden="true">▶</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="section" aria-labelledby="online-title">
+            <div class="section-head">
+                <div>
+                    <h2 id="online-title">線上音樂連結</h2>
+                </div>
+            </div>
+
+            <div class="library-list">
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=9003aff1958fe0e5869b0076831e9ad2" target="_blank" rel="noreferrer">
+        <span class="library-icon">01</span>
+        <span><span class="library-title">3歲小幼班 1</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=63713616f8e8a829a11bd9cde25d6d66" target="_blank" rel="noreferrer">
+        <span class="library-icon">02</span>
+        <span><span class="library-title">3歲小幼班 2</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=e10e6e6111a0007bc70e48c1682b5103" target="_blank" rel="noreferrer">
+        <span class="library-icon">03</span>
+        <span><span class="library-title">幼幼班-音樂是我的好朋友</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=d33d924f32baaae9e4b7ce79c6117db8" target="_blank" rel="noreferrer">
+        <span class="library-icon">04</span>
+        <span><span class="library-title">幼兒班 1</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=43fb4088ba2d592d5a06ba5a5b4f8d01" target="_blank" rel="noreferrer">
+        <span class="library-icon">05</span>
+        <span><span class="library-title">幼兒班 2</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=4f4bdea5b5bf06afae410a366857b53d" target="_blank" rel="noreferrer">
+        <span class="library-icon">06</span>
+        <span><span class="library-title">幼兒班 3</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=0994ee50cda6e7977cbabfaf4fc61bd4" target="_blank" rel="noreferrer">
+        <span class="library-icon">07</span>
+        <span><span class="library-title">幼兒班 4</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=0388be88a616e03fab375c114a606939" target="_blank" rel="noreferrer">
+        <span class="library-icon">08</span>
+        <span><span class="library-title">新先修 1</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=ca065c47b03df8cd802cb87cab3418ef" target="_blank" rel="noreferrer">
+        <span class="library-icon">09</span>
+        <span><span class="library-title">新先修 2</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=ab87900f063711297f2e91dc09b51456" target="_blank" rel="noreferrer">
+        <span class="library-icon">10</span>
+        <span><span class="library-title">新先修 3</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=ef2420e3713358ff266f1a95609c7608" target="_blank" rel="noreferrer">
+        <span class="library-icon">11</span>
+        <span><span class="library-title">新先修 4</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=f08f75a92aab01d7dc9a98795e09e460" target="_blank" rel="noreferrer">
+        <span class="library-icon">12</span>
+        <span><span class="library-title">新先修 REPERTOIRE 1</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=b0d4cfd2bf970534178d97139ea4d91d" target="_blank" rel="noreferrer">
+        <span class="library-icon">13</span>
+        <span><span class="library-title">新先修 REPERTOIRE 2</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=0deb955a3abb6d78288273326a6bb8d1" target="_blank" rel="noreferrer">
+        <span class="library-icon">14</span>
+        <span><span class="library-title">新先修 REPERTOIRE 3</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=ab8cc19f69ba56cbdae8e56f523b1040" target="_blank" rel="noreferrer">
+        <span class="library-icon">15</span>
+        <span><span class="library-title">新先修 REPERTOIRE 4</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=381f035c5636efa58b88b8ac3543ec3e" target="_blank" rel="noreferrer">
+        <span class="library-icon">16</span>
+        <span><span class="library-title">ANC REPERTOIRE 1</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=17a35558ceebd824fee9a050a46ccb45" target="_blank" rel="noreferrer">
+        <span class="library-icon">17</span>
+        <span><span class="library-title">ANC REPERTOIRE 2</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=73eb4122c769bc370f8c42b6318bfc91" target="_blank" rel="noreferrer">
+        <span class="library-icon">18</span>
+        <span><span class="library-title">JNC REPERTOIRE 1</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=cf5fb144994e9df97029f99fe42c0dbf" target="_blank" rel="noreferrer">
+        <span class="library-icon">19</span>
+        <span><span class="library-title">JNC REPERTOIRE 2</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=0d9110111a4d1b114f919b7a3e5d36b5" target="_blank" rel="noreferrer">
+        <span class="library-icon">20</span>
+        <span><span class="library-title">SOLFEGE AND ENSEMBLE 5</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=b4f3f4cc468b6dc94f1cbf7ca16aa59b" target="_blank" rel="noreferrer">
+        <span class="library-icon">21</span>
+        <span><span class="library-title">SOLFEGE AND ENSEMBLE 6</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=149fbf28cf4783ff662c6b66c29497fa" target="_blank" rel="noreferrer">
+        <span class="library-icon">22</span>
+        <span><span class="library-title">SOLFEGE AND ENSEMBLE 7</span></span>
+        <span class="library-action">›</span>
+    </a>
+
+    <a class="library-item" href="https://yms.ymm.co.jp/media/index.html?page=3589af9965a9b7c9295594772510b060" target="_blank" rel="noreferrer">
+        <span class="library-icon">23</span>
+        <span><span class="library-title">SOLFEGE AND ENSEMBLE 8</span></span>
+        <span class="library-action">›</span>
+    </a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

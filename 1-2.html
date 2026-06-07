@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stagea 1-2 | Music Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root{color-scheme:dark;--bg:#0F1115;--panel:rgba(28,32,40,.74);--panel-strong:rgba(28,32,40,.94);--line:rgba(255,255,255,.1);--text:#F5F7FA;--muted:#A7ADB8;--soft:#D9DEE7;--accent:#FA586A;--accent-soft:rgba(250,88,106,.16);--radius-lg:24px;--shadow:0 24px 60px rgba(0,0,0,.34)}
+        *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at top left,rgba(250,88,106,.08),transparent 32rem),linear-gradient(180deg,#151821 0%,var(--bg) 48%,#0B0D11 100%);color:var(--text);font-family:Inter,"Noto Sans TC",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}button,audio{font:inherit}.shell{width:min(900px,calc(100% - 32px));margin:0 auto;padding:22px 0 46px}.back-link{display:inline-flex;align-items:center;gap:8px;min-height:40px;margin-bottom:24px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.06);color:var(--soft);text-decoration:none;font-size:14px;font-weight:700;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);transition:transform .18s ease,background .18s ease}.back-link:hover{transform:translateX(-3px);background:rgba(255,255,255,.1)}.hero{display:grid;grid-template-columns:118px minmax(0,1fr);gap:22px;align-items:end;margin-bottom:28px}.album-symbol{display:grid;width:118px;height:118px;place-items:center;border:1px solid var(--line);border-radius:var(--radius-lg);background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.035)),rgba(28,32,40,.82);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.1);color:var(--accent);font-size:30px;font-weight:800}.eyebrow{margin:0 0 8px;color:var(--accent);font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}h1{margin:0;font-size:clamp(40px,9vw,76px);line-height:.96;font-weight:800;letter-spacing:0}.summary{margin:12px 0 0;color:var(--muted);font-size:15px;line-height:1.65}.player-card{position:sticky;top:14px;z-index:10;margin-bottom:18px;padding:18px;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--panel-strong);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}.now-label{margin:0 0 4px;color:var(--muted);font-size:13px;font-weight:700}#now-playing{display:block;margin-bottom:14px;overflow:hidden;color:var(--text);font-size:18px;font-weight:800;text-overflow:ellipsis;white-space:nowrap}audio{width:100%;height:42px;border-radius:12px}audio::-webkit-media-controls-panel{background-color:#1C2028}.track-list{overflow:hidden;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--panel);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}.track{display:grid;grid-template-columns:46px minmax(0,1fr) 34px;align-items:center;gap:14px;width:100%;min-height:66px;padding:10px 18px;border:0;border-bottom:1px solid rgba(255,255,255,.07);background:transparent;color:var(--text);cursor:pointer;text-align:left;transition:background .18s ease}.track:last-child{border-bottom:0}.track:hover{background:rgba(255,255,255,.055)}.track.active{background:var(--accent-soft)}.track-number{display:grid;width:42px;height:42px;place-items:center;border-radius:14px;background:rgba(255,255,255,.065);color:var(--muted);font-size:13px;font-weight:800}.track.active .track-number{background:var(--accent);color:#fff}.track-title{overflow:hidden;font-size:16px;font-weight:700;text-overflow:ellipsis;white-space:nowrap}.track-subtitle{margin-top:3px;color:var(--muted);font-size:13px}.track-action{display:grid;width:34px;height:34px;place-items:center;border-radius:50%;color:var(--muted);font-size:13px}.track.active .track-action{color:var(--accent)}@media (max-width:640px){.shell{width:min(100% - 24px,520px);padding-top:16px}.hero{grid-template-columns:86px minmax(0,1fr);gap:16px;align-items:center}.album-symbol{width:86px;height:86px;border-radius:22px;font-size:24px}.summary{font-size:14px}.player-card{top:10px;padding:14px}#now-playing{font-size:16px}.track{grid-template-columns:40px minmax(0,1fr) 28px;gap:12px;min-height:62px;padding:10px 14px}.track-number{width:38px;height:38px;border-radius:13px}}
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <a class="back-link" href="index.html">‹ 返回資料庫</a>
+        <section class="hero">
+            <div class="album-symbol">1-2</div>
+            <div>
+                <p class="eyebrow">Stagea 教材</p>
+                <h1>Stagea 1-2</h1>
+                <p class="summary">22 首曲目 · 無封面文字型播放器</p>
+            </div>
+        </section>
+        <section class="player-card" aria-label="播放器">
+            <p class="now-label">正在播放</p>
+            <span id="now-playing">選擇一首曲目開始播放</span>
+            <audio id="main-player" controls preload="metadata"></audio>
+        </section>
+        <section id="track-list" class="track-list" aria-label="曲目列表"></section>
+    </main>
+    <script>
+        const album = "1-2";
+        const songs = [
+            { no: "32", title: "Do Re Mi Fa超人", file: "1-2_32_Do Re Mi Fa超人.wav" },
+            { no: "33", title: "火車", file: "1-2_33_火車.wav" },
+            { no: "34", title: "來公園玩", file: "1-2_34_來公園玩.wav" },
+            { no: "35", title: "快樂的五指朋友", file: "1-2_35_快樂的五指朋友.wav" },
+            { no: "36", title: "點心王國的遊樂園", file: "1-2_36_點心王國的遊樂園.wav" },
+            { no: "37", title: "我最愛的長靴", file: "1-2_37_我最愛的長靴.wav" },
+            { no: "38", title: "冰霰", file: "1-2_38_冰霰.wav" },
+            { no: "39", title: "一起散", file: "1-2_39_一起散.wav" },
+            { no: "40", title: "在花海中奔馳", file: "1-2_40_在花海中奔馳.wav" },
+            { no: "41", title: "快樂的三輪車", file: "1-2_41_快樂的三輪車.wav" },
+            { no: "42", title: "泡澡真開心", file: "1-2_42_泡澡真開心.wav" },
+            { no: "43", title: "大家一起玩!", file: "1-2_43_大家一起玩!.wav" },
+            { no: "44", title: "新世界", file: "1-2_44_新世界.wav" },
+            { no: "45", title: "兔子大跳躍", file: "1-2_45_兔子大跳躍.wav" },
+            { no: "46", title: "Panda的鬆餅", file: "1-2_46_Panda的鬆餅.wav" },
+            { no: "47", title: "動物遊行", file: "1-2_47_動物遊行.wav" },
+            { no: "48", title: "好喜歡春天！", file: "1-2_48_好喜歡春天！.wav" },
+            { no: "49", title: "塔朗泰拉舞曲", file: "1-2_49_塔朗泰拉舞曲.wav" },
+            { no: "50", title: "麻亞", file: "1-2_50_麻亞.wav" },
+            { no: "51", title: "風的郵差", file: "1-2_51_風的郵差.wav" },
+            { no: "52", title: "祈", file: "1-2_52_祈.wav" },
+            { no: "53", title: "晨歌", file: "1-2_53_晨歌.wav" }
+        ];
+        const player = document.getElementById("main-player");
+        const nowPlaying = document.getElementById("now-playing");
+        const trackList = document.getElementById("track-list");
+        const musicPath = (file) => encodeURI(`Music for Stagea/${album}/${file}`);
+        function playSong(index) {
+            const song = songs[index];
+            document.querySelectorAll(".track").forEach((button) => button.classList.remove("active"));
+            document.querySelector(`[data-index="${index}"]`).classList.add("active");
+            player.src = musicPath(song.file);
+            nowPlaying.textContent = `${song.no} ${song.title}`;
+            player.load();
+            player.play().catch(() => { nowPlaying.textContent = `${song.no} ${song.title} · 點選播放鍵開始`; });
+        }
+        songs.forEach((song, index) => {
+            const button = document.createElement("button");
+            button.className = "track";
+            button.type = "button";
+            button.dataset.index = index;
+            button.innerHTML = `<span class="track-number">${song.no}</span><span><span class="track-title">${song.title}</span><span class="track-subtitle">Stagea ${album}</span></span><span class="track-action">▶</span>`;
+            button.addEventListener("click", () => playSong(index));
+            trackList.appendChild(button);
+        });
+        player.addEventListener("ended", () => {
+            const active = document.querySelector(".track.active");
+            const index = active ? Number(active.dataset.index) : -1;
+            if (index >= 0 && index < songs.length - 1) playSong(index + 1);
+            else nowPlaying.textContent = "播放清單已結束";
+        });
+        player.addEventListener("error", () => { nowPlaying.textContent = "音檔載入失敗，請確認檔案路徑"; });
+    </script>
+</body>
+</html>

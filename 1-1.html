@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stagea 1-1 | Music Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0F1115;
+            --surface: #151821;
+            --panel: rgba(28, 32, 40, 0.74);
+            --panel-strong: rgba(28, 32, 40, 0.94);
+            --line: rgba(255, 255, 255, 0.1);
+            --text: #F5F7FA;
+            --muted: #A7ADB8;
+            --soft: #D9DEE7;
+            --accent: #FA586A;
+            --accent-soft: rgba(250, 88, 106, 0.16);
+            --radius-lg: 24px;
+            --radius-md: 20px;
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(250, 88, 106, 0.08), transparent 32rem),
+                linear-gradient(180deg, #151821 0%, var(--bg) 48%, #0B0D11 100%);
+            color: var(--text);
+            font-family: Inter, "Noto Sans TC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        button, audio { font: inherit; }
+
+        .shell {
+            width: min(900px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 22px 0 46px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 40px;
+            margin-bottom: 24px;
+            padding: 8px 14px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--soft);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            transition: transform 180ms ease, background 180ms ease;
+        }
+
+        .back-link:hover {
+            transform: translateX(-3px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 118px minmax(0, 1fr);
+            gap: 22px;
+            align-items: end;
+            margin-bottom: 28px;
+        }
+
+        .album-symbol {
+            display: grid;
+            width: 118px;
+            height: 118px;
+            place-items: center;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035)), rgba(28, 32, 40, 0.82);
+            box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            color: var(--accent);
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .eyebrow {
+            margin: 0 0 8px;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(40px, 9vw, 76px);
+            line-height: 0.96;
+            font-weight: 800;
+            letter-spacing: 0;
+        }
+
+        .summary {
+            margin: 12px 0 0;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.65;
+        }
+
+        .player-card {
+            position: sticky;
+            top: 14px;
+            z-index: 10;
+            margin-bottom: 18px;
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background: var(--panel-strong);
+            box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+
+        .now-label {
+            margin: 0 0 4px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        #now-playing {
+            display: block;
+            margin-bottom: 14px;
+            overflow: hidden;
+            color: var(--text);
+            font-size: 18px;
+            font-weight: 800;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        audio {
+            width: 100%;
+            height: 42px;
+            border-radius: 12px;
+        }
+
+        audio::-webkit-media-controls-panel {
+            background-color: #1C2028;
+        }
+
+        .track-list {
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background: var(--panel);
+            box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+        }
+
+        .track {
+            display: grid;
+            grid-template-columns: 46px minmax(0, 1fr) 34px;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            min-height: 66px;
+            padding: 10px 18px;
+            border: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            text-align: left;
+            transition: background 180ms ease;
+        }
+
+        .track:last-child { border-bottom: 0; }
+        .track:hover { background: rgba(255, 255, 255, 0.055); }
+        .track.active { background: var(--accent-soft); }
+
+        .track-number {
+            display: grid;
+            width: 42px;
+            height: 42px;
+            place-items: center;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.065);
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .track.active .track-number {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .track-title {
+            overflow: hidden;
+            font-size: 16px;
+            font-weight: 700;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .track-subtitle {
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .track-action {
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border-radius: 50%;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .track.active .track-action {
+            color: var(--accent);
+        }
+
+        @media (max-width: 640px) {
+            .shell {
+                width: min(100% - 24px, 520px);
+                padding-top: 16px;
+            }
+
+            .hero {
+                grid-template-columns: 86px minmax(0, 1fr);
+                gap: 16px;
+                align-items: center;
+            }
+
+            .album-symbol {
+                width: 86px;
+                height: 86px;
+                border-radius: 22px;
+                font-size: 24px;
+            }
+
+            .summary {
+                font-size: 14px;
+            }
+
+            .player-card {
+                top: 10px;
+                padding: 14px;
+            }
+
+            #now-playing {
+                font-size: 16px;
+            }
+
+            .track {
+                grid-template-columns: 40px minmax(0, 1fr) 28px;
+                gap: 12px;
+                min-height: 62px;
+                padding: 10px 14px;
+            }
+
+            .track-number {
+                width: 38px;
+                height: 38px;
+                border-radius: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <a class="back-link" href="index.html">‹ 返回資料庫</a>
+
+        <section class="hero">
+            <div class="album-symbol">1-1</div>
+            <div>
+                <p class="eyebrow">Stagea 教材</p>
+                <h1>Stagea 1-1</h1>
+                <p class="summary">24 首曲目 · 無封面文字型播放器</p>
+            </div>
+        </section>
+
+        <section class="player-card" aria-label="播放器">
+            <p class="now-label">正在播放</p>
+            <span id="now-playing">選擇一首曲目開始播放</span>
+            <audio id="main-player" controls preload="metadata"></audio>
+        </section>
+
+        <section id="track-list" class="track-list" aria-label="曲目列表"></section>
+    </main>
+
+    <script>
+        const album = "1-1";
+        const songs = [
+            { no: "01", title: "音樂真是好奇妙!", file: "1-1_01_音樂真是好奇妙!.wav" },
+            { no: "02", title: "活力進行曲", file: "1-1_02_活力進行曲.wav" },
+            { no: "03", title: "在原玩", file: "1-1_03_在原玩.wav" },
+            { no: "04", title: "蒲公英", file: "1-1_04_蒲公英.wav" },
+            { no: "05", title: "散進行曲", file: "1-1_05_散進行曲.wav" },
+            { no: "06", title: "Do, Re, Mi,小蝌蚪", file: "1-1_06_Do, Re, Mi,小蝌蚪.wav" },
+            { no: "07", title: "海豚", file: "1-1_07_海豚.wav" },
+            { no: "08", title: "鏡子之舞", file: "1-1_08_鏡子之舞.wav" },
+            { no: "09", title: "小兔子與大象", file: "1-1_09_小兔子與大象.wav" },
+            { no: "10", title: "玩具", file: "1-1_10_玩具.wav" },
+            { no: "11", title: "青蛙呱呱呱", file: "1-1_11_青蛙呱呱呱.wav" },
+            { no: "12", title: "好朋友樂隊", file: "1-1_12_好朋友樂隊.wav" },
+            { no: "13", title: "Crabs海灘", file: "1-1_13_Crabs海灘.WAV" },
+            { no: "14", title: "在海玩", file: "1-1_14_在海玩.wav" },
+            { no: "15", title: "Do, Re, Mi,小青蛙", file: "1-1_15_Do, Re, Mi,小青蛙.wav" },
+            { no: "16", title: "哇!嚇一跳", file: "1-1_16_哇!嚇一跳.wav" },
+            { no: "17", title: "Copying好好玩", file: "1-1_17_Copying好好玩.WAV" },
+            { no: "18", title: "輕飄飄的泡泡", file: "1-1_18_輕飄飄的泡泡.wav" },
+            { no: "19", title: "吉格舞曲", file: "1-1_19_吉格舞曲.wav" },
+            { no: "20", title: "蟲蟲合唱團", file: "1-1_20_蟲蟲合唱團.wav" },
+            { no: "21", title: "歡迎光臨!動物親子餐廳", file: "1-1_21_歡迎光臨!動物親子餐廳.wav" },
+            { no: "22", title: "去機器人樂園遠足", file: "1-1_22_去機器人樂園遠足.wav" },
+            { no: "23", title: "船歌", file: "1-1_23_船歌.wav" },
+            { no: "24", title: "小夜曲", file: "1-1_24_小夜曲.wav" }
+        ];
+
+        const player = document.getElementById("main-player");
+        const nowPlaying = document.getElementById("now-playing");
+        const trackList = document.getElementById("track-list");
+
+        function musicPath(file) {
+            return encodeURI(`Music for Stagea/${album}/${file}`);
+        }
+
+        function playSong(index) {
+            const song = songs[index];
+            document.querySelectorAll(".track").forEach((button) => button.classList.remove("active"));
+            const current = document.querySelector(`[data-index="${index}"]`);
+            current.classList.add("active");
+            player.src = musicPath(song.file);
+            nowPlaying.textContent = `${song.no} ${song.title}`;
+            player.load();
+            player.play().catch(() => {
+                nowPlaying.textContent = `${song.no} ${song.title} · 點選播放鍵開始`;
+            });
+        }
+
+        songs.forEach((song, index) => {
+            const button = document.createElement("button");
+            button.className = "track";
+            button.type = "button";
+            button.dataset.index = index;
+            button.innerHTML = `
+                <span class="track-number">${song.no}</span>
+                <span>
+                    <span class="track-title">${song.title}</span>
+                    <span class="track-subtitle">Stagea ${album}</span>
+                </span>
+                <span class="track-action">▶</span>
+            `;
+            button.addEventListener("click", () => playSong(index));
+            trackList.appendChild(button);
+        });
+
+        player.addEventListener("ended", () => {
+            const active = document.querySelector(".track.active");
+            const index = active ? Number(active.dataset.index) : -1;
+            if (index >= 0 && index < songs.length - 1) {
+                playSong(index + 1);
+            } else {
+                nowPlaying.textContent = "播放清單已結束";
+            }
+        });
+
+        player.addEventListener("error", () => {
+            nowPlaying.textContent = "音檔載入失敗，請確認檔案路徑";
+        });
+    </script>
+</body>
+</html>

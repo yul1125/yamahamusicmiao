@@ -1,2 +1,0 @@
-# yamahamusicmiao
-MUSIC
